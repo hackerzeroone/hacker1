@@ -501,7 +501,10 @@
                   fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                     headers: { Authorization: 'Bearer ' + tokenResponse.access_token }
                   })
-                  .then(res => res.json())
+                  .then(res => {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                  })
                   .then(userInfo => {
                     showGoogleUser(userInfo.name, userInfo.email, userInfo.picture);
                   })
