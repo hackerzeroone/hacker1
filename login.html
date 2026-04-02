@@ -521,7 +521,7 @@
 
     // Display Google user info after sign-in
     function showGoogleUser(name, email, picture) {
-      document.getElementById('googleUserPic').src = picture || '';
+      document.getElementById('googleUserPic').src = picture || 'https://placehold.co/48x48/667eea/ffffff?text=U';
       document.getElementById('googleUserName').textContent = name;
       document.getElementById('googleUserEmail').textContent = email;
       document.getElementById('googleUserInfo').style.display = 'block';
