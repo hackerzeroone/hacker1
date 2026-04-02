@@ -492,15 +492,26 @@
       if (typeof google !== 'undefined' && google.accounts) {
         google.accounts.id.prompt((notification) => {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            // Fallback: use the popup flow
-            google.accounts.oauth2.initCodeClient({
+            // Fallback: use the token flow to get user info directly
+            google.accounts.oauth2.initTokenClient({
               client_id: GOOGLE_CLIENT_ID,
-              scope: 'email profile',
-              ux_mode: 'popup',
-              callback: (response) => {
-                console.log('Google auth code:', response.code);
+              scope: 'email profile openid',
+              callback: (tokenResponse) => {
+                if (tokenResponse.access_token) {
+                  fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: 'Bearer ' + tokenResponse.access_token }
+                  })
+                  .then(res => res.json())
+                  .then(userInfo => {
+                    showGoogleUser(userInfo.name, userInfo.email, userInfo.picture);
+                  })
+                  .catch(err => {
+                    console.error('Failed to fetch user info:', err);
+                    alert('Failed to retrieve Google account info. Please try again.');
+                  });
+                }
               },
-            }).requestCode();
+            }).requestAccessToken();
           }
         });
       } else {
@@ -531,7 +542,7 @@
       document.getElementById('googleSignInBtn').style.display = 'flex';
       document.getElementById('loginForm').style.display = 'block';
       document.querySelector('.login-header h1').textContent = 'Welcome Back';
-      document.querySelector('.login-header p').textContent = 'Sign in to your account';
+      document.querySelector('.login-header p').textContent = 'Sign in to your GameVault account';
     }
 
     // Decode JWT token from Google
