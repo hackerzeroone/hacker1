@@ -1002,7 +1002,7 @@
       const grid = document.getElementById('gameGrid');
       grid.innerHTML = filteredGames.map(game => `
         <div class="game-card" data-category="${game.genre}" data-title="${game.title.toLowerCase()}">
-          <img src="${game.img}" alt="${game.title}" onerror="this.src='https://placehold.co/400x220/1a1a2e/667eea?text=Game'">
+          <img src="${game.img}" alt="${game.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x220/1a1a2e/667eea?text=Game'">
           <div class="game-card-body">
             <h4>${game.title}</h4>
             <div class="game-genre">${game.genre.charAt(0).toUpperCase() + game.genre.slice(1)}</div>
